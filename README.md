@@ -10,7 +10,7 @@ Dart中所有对象默认都是 `null`
 
 ------
 
-#### 变量
+### 变量
 
 Dart中可以使用`var`来声明变量，也可以直接指定类型来声明变量，未声明类型的变量在首次赋值时由Dart推断并确定变量的类型，类型确定后不可变更。如果可以建议在声明时明确变量的类型。
 
@@ -28,7 +28,7 @@ Dart中可以使用`var`来声明变量，也可以直接指定类型来声明�
 
 ------
 
-#### Dart中的内置类型:
+### Dart中的内置类型:
 
 - Number (数值型)
 - String 字符串)
@@ -320,16 +320,186 @@ list表示一个有序集合，与数组其实是同一个概念。list可以储
 >
 > **2.9 遍历**
 >
-> ​	list.forEach( (element) {
+> ```
+> list.forEach( (element) {
+> 	// do smoething
+> 	// 不能对list进行add或remove操作，但是可以修改元素值
+> });	
+> ```
 >
-> ​		// do smoething
+> ```
+> for( var lalue in list ){
+> 	print(lalue);
+> }
+> ```
+
+------
+
+### 运算符
+
+**1、简单运算符：`+`、`-` 、`*`、`/`、`~/`（短除法，取结果的整数）、`%`（取余）**
+
+**2、三目运算符**
+
+> int a  = 10;
 >
-> ​		// 不能对list进行add或remove操作，但是可以修改元素值
+> int b = a > 10 ?  'A' : 'B';
+
+**3、联级操作符**
+
+> ```
+> String s = (new StringBuffer()
+> 	 ..write('a')
+> 	..write('b')
+> 	..write('c')
+> ).toString();
+> print(s);	// abc
 >
-> ​	});
+> ```
+
+**4、as  is   is!**
+
+> as : 判断对象是否属于某种类型
 >
-> ​	for( var lalue in list ){
+> is : 如果对象具有指定的类型，则为true
 >
-> ​		print(lalue);
+> is! : 如果对象具有指定的类型，则为fasle
+
+------
+
+
+
+### 控制语句 ######
+
+
+
+------
+
+
+
+### 异常捕获 
+
+Dart的异常捕获可以抛出任意类型的对象。
+
+> 1、抛出异常
 >
-> ​	}
+> throw Exception('任意类型的异常');  
+>
+> 2、捕获异常
+>
+> ```
+> try {
+> 	// to do something
+> } on CustomException catch (e) {
+> 	// 捕获自定义类型异常
+> } on Exception catch (e) {
+> 	// 捕获特定类型异常
+> } catch (e, s) {
+> 	// 捕获所有类型异常
+> } finally {
+> 	
+> }
+> ```
+
+------
+
+### 函数 #####
+
+Dart是一门面向对象的语言，在Dart中函数是Function类型的对象，函数可以分配给变量，也可以当成参数传递给其他函数。
+
+**1、函数定义**
+
+函数定义有函数名称、函数入参、函数返回参数和函数执行体。
+
+> ```
+> int addition(int a, int b) {
+>     return a + b;
+> }
+>
+> int i = addition(100, 2);	// i=102
+> ```
+
+**2、可选参数**
+
+函数的参数可以声明为可选类型，即调用函数时可不传参数，在函数定义时使用{param1, param2, ...}指定命名参数。
+
+> ```
+> void userSettings({int age, String name}) {
+>   // ....
+> }
+>
+> userSettings();
+> userSettings(age: 18);
+> userSettings(name: 'tom');
+> userSettings(age: 18, name: 'tom');
+> // 以上方式调用函数都是正确的
+> ```
+
+**3、毕传参数**
+
+如果函数的参数在调用时必须传入，那个在声明函数时可以使用@required修饰参数。
+
+> ```
+> void userSettings({@required int age, String name}) {
+>   // ....
+> }
+>
+> // 以上函数将age参数声明为了必须传入的参数，函数调用时不传入必须参数则会报错。
+> ```
+
+**4、可选的位置参数**
+
+在函数声明时，可以使用[]将参数标记为可选的位置参数
+
+> ```
+> void userSettings(int age, String name, [String sex]) {
+>   if (sex != null) {
+>     pring('性别：$sex')
+>   }
+> }
+>
+> userSettings(18, 'tom');
+> userSettings(18, 'tom', '男');
+> ```
+
+**5、默认参数**
+
+
+
+**6、函数作为变量**
+
+> ```
+> var say = (some) {
+> 	print(some);
+> };
+> say('新年好！')
+> ```
+
+
+
+**7、函数作为参数**
+
+
+
+**8、闭包**
+
+
+
+------
+
+
+
+### 枚举######
+
+### 泛型 #####
+
+
+
+### 异步编程 #######
+
+### 面向对象编程 #####
+
+
+
+
+
