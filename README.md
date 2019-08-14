@@ -370,7 +370,7 @@ list表示一个有序集合，与数组其实是同一个概念。list可以储
 >
 > **as  is   is! 判断对象类型**
 >
-> as : 判断对象是否属于某种类型
+> as : 类型转换
 >
 > is : 如果对象具有指定的类型，则为true
 >
@@ -525,6 +525,17 @@ Dart的异常捕获可以抛出任意类型的对象。
 
 Dart是一门面向对象的语言，在Dart中函数是Function类型的对象，函数可以分配给变量，也可以当成参数传递给其他函数。
 
+`=>`可以简化函数，适用于实现简单逻辑的函数
+
+> ```
+> // 定义一个有返回值的函数
+> String run() {
+>   return 'a string';
+> }
+> // 使用 => 声明以上函数
+> String run() => 'a string';
+> ```
+
 ##### 1、函数定义
 
 函数定义有函数名称、函数入参、函数返回参数和函数执行体。
@@ -663,13 +674,202 @@ Dart是一门面向对象的语言，在Dart中函数是Function类型的对象�
 
 
 
-### 枚举######
+### 面向对象编程  ####
 
-### 泛型 #####
+#### 对象和类
 
-### 异步编程 #######
+使用`class`关键字来声明一个类，使用`new`关键字(也可以省略`new`)创建一个对象，Dart中一切都是对象，所有对象都继承与`Object`类
 
-### 面向对象编程 #####
+> ```
+> // 创建一个对象
+> Person person = new Person(); 或者 var person = Person();
+>
+> // 创建一个类
+> class Person {
+> }
+> ```
+
+##### 类的属性和方法
+
+属性默认生产setter和getter方法，但是使用final声明的属性只有getter方法。
+
+类的属性和方法都可以通过点语法`.`来访问，访问属性时实际也是访问它的setter和getter方法。
+
+使用`_`声明属性、方法或者类为私有。
+
+使用`import`导入类。
+
+Dart中方法不可以被重载(方法参数支持可选参数)
+
+> ```
+> // 创建一个对象
+> var person = Person();
+> person.name = 'Tom';
+> person.age = 18;
+> person.run();
+>
+> person._wight = 180.0;	// 这里会报错，类外部不能访问私有属性
+>
+> // 创建一个类
+> class Person {
+> 	String name;
+> 	int age;
+> 	double _wight;	// _开头的属性都是私有属性
+> 	void run() {
+>       print('runner is $name, age: $age');
+> 	}
+> 	// 函数不支持重载(下面run函数声明是错误的)
+> 	void run(String name) {}  
+> }
+> ```
+
+##### 计算属性
+
+Dart中属性有存储属性、计算属性。
+
+计算属性的值通过计算而来本身并不存储值。
+
+计算属性的赋值，实际上是通过计算将结果赋值给其他的实例变量。
+
+> ```
+> var wall = Wall();
+> wall.width = 100;
+> wall.height = 10;
+> //  print(wall.area());
+> print(wall.area);
+> wall.area = 500;
+>   
+> class Wall {
+>   num width, height;
+> //  num area() {
+> //    return width * height;
+> //  }
+>   num get area => width * height;	// 计算墙的面积
+>       set area(num value) {
+>         height = value / 100;		// 通过设置面积来给墙的高度赋值
+>       }
+> }
+>
+> // 函数主要表达对象的行为动作，而计算属性主要用来表达对象自身的属性
+> ```
+
+##### 类的构造方法
+
+如果类没有自定义的构成方法，则类自己会有一个默认的构成方法。
+
+如果有自定义的构造方法，默认方法会自动无效。
+
+构造方法不能够重载。
+
+可以使用命名构造方法（`类名.函数名(){}`），给类构造多个构造方法
+
+> ```
+> class Wall {
+> 	num width, height;
+> 	final Color color;
+>
+> 	// 默认的构造方法
+> 	Wall() {
+>   	}
+>   	
+>   	// 自定义构造方法
+>   	Wall(num width, num height) {
+>     	this.width = width;
+>     	this.height = height;
+>   	}
+>   	// 自定义构造方法(这种构造方法可以用来解决类中有final属性，但是希望外部传值的情况)
+>   	Wall(this.width, this.height, this.clolr){
+>     	print('$width   $height');
+>   	}
+>   	
+>   	// 命名构成方法(可实现多个构造方法)
+>     Wall.withWidth(this.width) {
+>     	print('$width');
+> 	}
+> 	Wall.withHeight(this.height) {
+>     	print('$height');
+> 	}
+>   	
+> }
+> ```
+
+##### 类的常量构造方法
+
+如果类是不可变状态，可以把对象定义为编译时常量
+
+使用`const`声明构造方法，且所有属性都是`final`声明
+
+使用`const`声明对象，可省略
+
+> ```
+> const wall = Wall(20, 20);
+> class Wall {
+> 	final num width, height;
+>   	const Wall(this.width, this.height, this.clolr);
+> }
+> ```
+
+##### 工厂构造方法
+
+工厂构造方法可以理解为设计模式中的工厂模式
+
+工厂构造方法中可以返回对象
+
+使用`factory`声明工厂构造方法
+
+> ```
+> var wall = Wall(20);
+> print(wall.color);
+>
+> class Wall {
+>   num width, height;
+>   Color color;
+>   // 工厂构造函数 通过宽度返回不同颜色墙对象
+>   factory Wall(num width) {
+>     if (width > 10) {
+>       return Wall._init(width, Colors.yellow);
+>     }
+>     return Wall._init(width, Colors.red);
+>   }
+>
+>   Wall._init(this.width, this.color){
+>     print('$width   $height');
+>   }
+> }
+> ```
+
+##### 对象的call()方法
+
+当类实现了call()方法时，该类的对象可以作为方法使用
+
+> ```
+> var wall = Wall();
+> wall();	// 对象当成了方法使用
+>
+> class Wall {
+>   num width, height;
+>   // 也可以不传参数 void call() {}
+>   void call(this.width, this.color){
+>     print('$width   $height');
+>   }
+> }
+> ```
+
+##### 对象操作符  ######
+
+##### 静态成员  ########
+
+#### 继承 ######
+
+#### Mixins ######
+
+### 枚举 ###########
+
+### 泛型 ##### #####
+
+### 异步编程 ###### #######
+
+###  #####
 
 
 
